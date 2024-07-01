@@ -148,7 +148,9 @@ def game():
 
         # check collisions with bins
         for bin_sprite in bins:
-            if item.sprite.rect.colliderect(bin_sprite.rect):
+            if bin_sprite.mask.overlap(item.sprite.mask,
+                                       (item.sprite.rect.x - bin_sprite.rect.x,
+                                        item.sprite.rect.y - bin_sprite.rect.y)):
                 if bin_sprite.bin_type == item.sprite.item_type:
                     score += 1
                 else:

@@ -48,6 +48,7 @@ class Item(pygame.sprite.Sprite):
             "images/" + random.choice(item_imgs[item_type]) + ".png")).convert_alpha()
         self.image = pygame.transform.scale_by(self.image, 5)
         self.rect = self.image.get_frect(center=settings.screen_size/2)
+        self.mask = pygame.mask.from_surface(self.image)
         self.item_type = item_type
         self.drag = False
 
@@ -72,4 +73,5 @@ class Bin(pygame.sprite.Sprite):
             "images/" + bin_type + "-bin.png")).convert_alpha()
         self.image = pygame.transform.scale_by(self.image, 5)
         self.rect = self.image.get_frect(center=pos)
+        self.mask = pygame.mask.from_surface(self.image)
         self.bin_type = bin_type
