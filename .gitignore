@@ -4,3 +4,4 @@ piskels/
 items.md
 *.spec
 build/
+dist/
