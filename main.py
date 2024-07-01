@@ -78,6 +78,14 @@ def main_menu():
         draw_background()
         draw_logo()
 
+        # htp: how to play
+        htp_line_1 = draw_text(
+            "How to play: Drag the items into the correct bins.", "white")
+        htp_line_2 = draw_text(
+            "Try to get as many correct as you can in 30s!", "white")
+        screen.blit(htp_line_1, htp_line_1.get_frect(center=(middle_x, 470)))
+        screen.blit(htp_line_2, htp_line_2.get_frect(center=(middle_x, 520)))
+
         # update and draw buttons
         for button in menu_buttons:
             button.update(clicking)
