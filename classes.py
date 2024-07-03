@@ -45,7 +45,7 @@ class Item(pygame.sprite.Sprite):
     def __init__(self, item_type: str):
         super().__init__()
         self.image = pygame.image.load(settings.get_file_path(
-            "images/" + random.choice(item_imgs[item_type]) + ".png")).convert_alpha()
+            f"images/{random.choice(item_imgs[item_type])}.png")).convert_alpha()
         self.image = pygame.transform.scale_by(self.image, 5)
         self.rect = self.image.get_frect(center=settings.screen_size/2)
         self.mask = pygame.mask.from_surface(self.image)

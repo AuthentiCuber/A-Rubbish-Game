@@ -4,7 +4,7 @@ from pygame.locals import *
 import sys
 import random
 
-from classes import Item, Bin, Button, draw_text
+from classes import Item, Bin, Button, draw_text, item_imgs
 import settings
 
 # initialise pygame
@@ -25,6 +25,8 @@ ended = False
 
 score = 0
 timer = 0
+
+# functions called by clicking on buttons
 
 
 def close_game():
@@ -83,8 +85,30 @@ def main_menu():
             "How to play: Drag the items into the correct bins.", "white")
         htp_line_2 = draw_text(
             "Try to get as many correct as you can in 30s!", "white")
-        screen.blit(htp_line_1, htp_line_1.get_frect(center=(middle_x, 470)))
-        screen.blit(htp_line_2, htp_line_2.get_frect(center=(middle_x, 520)))
+        screen.blit(htp_line_1, htp_line_1.get_frect(center=(middle_x, 490)))
+        screen.blit(htp_line_2, htp_line_2.get_frect(center=(middle_x, 540)))
+
+        # item displays
+        for i in range(1, 9):
+            # space vertically
+            draw_y = (i % 4) * 100 + 80
+            # draw in from sides
+            x_offset = 60
+            label = draw_text(item_names[i-1], "white")
+            # split into two columns
+            if i <= 4:
+                # draw on left
+                x = x_offset
+                screen.blit(label, label.get_frect(
+                    midleft=(x + 50, draw_y)))
+            else:
+                # draw on right
+                x = settings.screen_size.x - x_offset
+                screen.blit(label, label.get_frect(
+                    midright=(x - 50, draw_y)))
+
+            screen.blit(items[i-1], items[i-1].get_frect(
+                center=(x, draw_y)))
 
         # update and draw buttons
         for button in menu_buttons:
@@ -167,7 +191,7 @@ def game():
         timer += dt
         timer_text = draw_text(str(round(timer, 1)), "white")
         screen.blit(timer_text, timer_text.get_frect(
-            midtop=(settings.screen_size.x/2, 20)))
+            midtop=(middle_x, 20)))
 
         pygame.display.flip()
 
@@ -206,21 +230,31 @@ def end_screen():
 
 item_types = ["rubbish", "recycling", "foodscrap"]
 
+# used as labels on main menu
+item_names = ["Rubbish bag",
+              "Plastic bag",
+              "Cardboard box",
+              "Newspaper",
+              "Glass bottle",
+              "Apple core",
+              "Banana skin",
+              "Fish bone"]
+
 # create first item
 item = pygame.sprite.GroupSingle()
 new_item()
 
+middle_y = settings.screen_size.y / 2
+middle_x = settings.screen_size.x / 2
 # create 3 bins
 bin_y = settings.screen_size.y - 80
 rubbish_bin = Bin((settings.screen_size.x / 4, bin_y), "rubbish")
-recycle_bin = Bin((settings.screen_size.x / 2, bin_y), "recycling")
+recycle_bin = Bin((middle_x, bin_y), "recycling")
 foodscrap_bin = Bin((settings.screen_size.x / (4/3), bin_y), "foodscrap")
 bins = pygame.sprite.Group()
 bins.add(rubbish_bin, recycle_bin, foodscrap_bin)
 
 
-middle_y = settings.screen_size.y / 2
-middle_x = settings.screen_size.x / 2
 # create main menu buttons
 start_button = Button("Start", (middle_x, middle_y), game)
 quit_button = Button("Quit", (middle_x, middle_y + 70), close_game)
@@ -239,6 +273,17 @@ pause_button.rect.topright = pause_button.rect.center
 # endscreen buttons
 try_again_button = Button("Try again", (middle_x, middle_y + 120), try_again)
 end_buttons: list[Button] = [quit_button, try_again_button]
+
+# Item images for main menu
+items: list[pygame.Surface] = []
+# take names from classes item_imgs
+for item_group in item_imgs.values():
+    for item_name in item_group:
+        # load image of that name
+        item_img = pygame.image.load(settings.get_file_path(
+            f"images/{item_name}.png")).convert_alpha()
+        item_img = pygame.transform.scale_by(item_img, 5)
+        items.append(item_img)
 
 # logo image
 logo_img = pygame.image.load(
@@ -261,7 +306,7 @@ background_scaled = pygame.transform.scale(
 
 def draw_background():
     screen.blit(background_scaled, background_scaled.get_frect(
-        centerx=settings.screen_size.x/2))
+        centerx=middle_x))
 
 
 # start game at main menu
